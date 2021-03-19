@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/sqlite.js"></script>
+    <script src="/javascripts/calldb.js"></script>
+
+</head>
+
+<body>
+    <h1>
+        <%= title %>
+    </h1>
+    <p>Welcome to
+        <%= title %>
+    </p>
+    <a href="/users">users</a>
+    <a href="/test">echarts</a>
+    <a href="/insertData">insert</a>
+    <button onclick="calldb();">insert</button>
+</body>
+
+</html>

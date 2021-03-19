@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/echarts.min.js"></script>
+    <script src="/javascripts/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 600px;height:400px;"></div>
+    <div>日期：<input type="text" id="date" value="2021-2-8"></div>
+    <div>收缩压：<input type="text" id="systolic" value="120"></div>
+    <div>舒张压：<input type="text" id="diastolic" value="83"></div>
+    <div>心率：<input type="text" id="hr" value="65"></div>
+
+    <button id="testBtn" onclick="test()">添加</button>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: '血压记录'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['收缩压', '舒张压', '心率']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['2021-2-1', '2021-2-2', '2021-2-3', '2021-2-4', '2021-2-5', '2021-2-6', '2021-2-7']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: '收缩压',
+                type: 'line',
+                data: [120, 132, 126, 131, 125, 132, 125]
+            }, {
+                name: '舒张压',
+                type: 'line',
+                data: [80, 81, 85, 86, 90, 85, 88]
+            }, {
+                name: '心率',
+                type: 'line',
+                data: [65, 66, 63, 67, 70, 66, 62]
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+        function test() {
+            var date = $("#date").val();
+            var systolic = $("#systolic").val();
+            var diastolic = $("#diastolic").val();
+            var hr = $("#hr").val();
+            $.post("/insertData", {
+                "date": date,
+                "systolic": systolic,
+                "diastolic": diastolic,
+                "hr": hr
+            }, function(result) {
+                var myChart = echarts.init($("#main").get(0));
+                //var option = getBaseChart();
+                //option.series[0].data = [1000, 1000, 1000, 1000, 1000, 1000, 1000];
+                option.xAxis.data.push(date);
+                option.series[0].data.push(systolic);
+                option.series[1].data.push(diastolic);
+                option.series[2].data.push(hr);
+
+                myChart.setOption(option);
+            });
+
+
+
+        }
+    </script>
+</body>
+
+</html>
